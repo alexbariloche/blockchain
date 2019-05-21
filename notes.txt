@@ -1,0 +1,82 @@
+account "0x4a190f1baa50b232bc49ed9e7d1dd084ca55667d"
+
+
+>>> Private blockchain
+
+- cd ~/Ethereum/privblk
+- geth --port 3000 --networkid 58343 --nodiscover --datadir=./blkchain --maxpeers=0  --rpc --rpcport 8543 --rpcaddr 127.0.0.1 --rpccorsdomain "*" --rpcapi "eth,net,web3,personal,miner"
+
+Geth (another terminal)
+- cd ~/Ethereum/privblk
+- geth attach http://127.0.0.1:8543
+> eth.accounts
+> eth.coinbase
+> personal.newAccount('seed')
+> personal.unlockAccount(web3.eth.coinbase, "seed", 15000)
+	account= "0xe7f0605861d0de8100675bbeb5bf506c07935693"  ('seed')
+> miner.start() [ .stop()]
+
+Smart Contract (Truffle)
+- cd ~/Ethereum/privblk/app
+-  develop contracts and migrations
+- truffle migrate --reset (with the priv blkchain started and while mining blocks)
+    ** it takes a while ! **
+
+Private Ether Explorer (web)
+- cd ~/Ethereum/PrivateEtherExplorer
+- npm start
+- localhost:8546
+
+
+>>> Election -- with Ganache
+
+- Start Ganache
+- cd ~/Ethereum/election
+- truffle migrate [ --reset]
+- truffle console
+
+
+>>> Checking -- with private blockchain
+
+- cd ~/Ethereum/checking
+- geth --port 3000 --networkid 58343 --nodiscover --datadir=./blkchain --maxpeers=0  --rpc --rpcport 8543 --rpcaddr 127.0.0.1 --rpccorsdomain "*" --rpcapi "eth,net,web3,personal,miner"
+
+Account: "0xa8B544EFee661F371baBc44fda56ADd52Dc58779" ("seed")
+
+Geth (another terminal)
+- same as above at checking folder and using this Account
+
+Smart Contract (Truffle)
+- same as above at checking/app folder
+
+Private Ether Explorer (web)
+- same as above
+
+
+>>> Truffle console commands
+
+> Checking.deployed().then( function (instance) { app = instance; })
+> app.banks(1).then( function (b) { bank1 = b;})
+> app.persons(1).then( function (p) { pers1 = p;})
+> app.accounts(1).then( function (a) { acc1 = a;})
+> acc1.balance.toNumber()
+> app.depositAccount(2,50)
+> app.accounts(2).then( function (a) { acc2 = a;})
+> acc2.balance.toNumber()
+> app.checks(1).then( function (c) { chk1 = c;})
+> chk1.amount.toNumber()
+> chk1.account.toNumber()
+> chk1.paid
+> app.payCheck(1, 2)
+> app.checks(1).then( function (c) { chk1 = c;})
+> app.accounts(1).then( function (a) { acc1 = a;})
+> app.accounts(2).then( function (a) { acc2 = a;})
+> acc1.balance.toNumber()
+> acc2.balance.toNumber()
+> chk1.paid
+> app.withdrawAccount(2,100)
+> app.accounts(2).then( function (a) { acc2 = a;})
+> acc2.balance.toNumber()
+
+> .exit
+
